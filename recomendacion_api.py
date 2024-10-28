@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 import pandas as pd
 
 app = FastAPI()
@@ -61,7 +60,7 @@ month_mapping = {
 }
 
 
-@app.get('film_count_m')
+@app.get('/film_count_m')
 def film_count_m(month: str):
     # Convertir el nombre del mes a su número correspondiente
     month_number = month_mapping.get(month.lower())
@@ -73,3 +72,8 @@ def film_count_m(month: str):
     # Contar los IDs en las filas filtradas
     count_ids = filtered_df['id'].count()
     return {"endpoint0": f"Fueron estrenadas {count_ids} peliculas en el mes de {month}"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
