@@ -2,8 +2,15 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi import FastAPI, HTTPException
 import pandas as pd
+import os
 
 app = FastAPI()
+
+
+@app.get('/')
+def read_root():
+    return {"welcome": "Bienvenido a la API"}
+
 
 # Mapeo de meses
 month_mapping = {
@@ -43,12 +50,28 @@ async def film_cant_mes(month: str):
     Returns:
         _type_: ejemplo: 2000 filmaciones en el mes de enero
     """
-    # Cambia la ruta del archivo según la ubicación de tu archivo
-    df = pd.read_csv("dataset/data_movies.csv")
-    # Aplicar la función para obtener la cantidad de filmaciones según mes aplicado
-    result = film_count_m(df, month)
-    return result
+    try:
+        # Verificar si el archivo existe
+        if not os.path.exists("dataset/data_movies.csv"):
+            raise FileNotFoundError(
+                "Archivo csv no encontrado, revisa si la ruta del archivo es correcta.")
 
-if __name__ == "_recomendacion_api__":
+        # Leer el archivo CSV
+        df = pd.read_csv("dataset/data_movies.csv")
+
+        # Imprimir las primeras filas del DataFrame para verificar
+        print(df.head())
+
+        # Aplicar la función para obtener la cantidad de filmaciones según mes aplicado
+        result = film_count_m(df, month)
+        return JSONResponse(content=jsonable_encoder(result), media_type="application/json")
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=404, detail="Archivo csv no encontrado, revisa si la ruta del archivo es correcta.")
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error al leer el archivo csv: {str(e)}")
+
+if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
