@@ -3,6 +3,12 @@ import pandas as pd
 
 app = FastAPI()
 
+
+@app.get('/')
+def read_root():
+    return {"welcome": "Bienvenido a la API"}
+
+
 # Cargar el DataFrame
 df = pd.read_csv('data_movies.csv')
 
