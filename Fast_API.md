@@ -29,6 +29,10 @@ http://127.0.0.1:8000/
 * Visita Swagger UI en: http://127.0.0.1:8000/docs
 * Visita Redoc en: http://127.0.0.1:8000/redoc
 
+## Ejecutar en render:
+Entrar en el explorador y escribir:
+https://sistema-de-recomendacion-de-peliculas-8cnl.onrender.com
+
 
 
 
