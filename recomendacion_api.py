@@ -2,8 +2,16 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi import FastAPI, HTTPException
 import pandas as pd
+import aiocron
+import requests
 
 app = FastAPI()
+
+
+@aiocron.crontab('*/5 * * * *')
+async def self_ping():
+    response = requests.get('your_fastapi_endpoint')
+    print(f"Health check response: {response.status_code}")
 
 
 @app.get('/')
