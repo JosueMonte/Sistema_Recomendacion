@@ -98,7 +98,7 @@ async def film_cant_dia(weekday: str):
         # Busca la ruta del archivo y crea el DataFrame como variable
         df = pd.read_csv("dataset/data_movies.csv")
         # Aplicar la función para obtener la cantidad de filmaciones según dia de semana aplicado
-        result = cantidad_filmaciones_mes(df, weekday)
+        result = cantidad_filmaciones_dia(df, weekday)
         return JSONResponse(content=jsonable_encoder(result), media_type="application/json")
     except FileNotFoundError:
         raise HTTPException(
