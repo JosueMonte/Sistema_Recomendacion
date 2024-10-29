@@ -35,9 +35,9 @@ def cantidad_filmaciones_mes(df, month: str):
         raise HTTPException(
             status_code=400, detail=f"Mes '{month}' no es válido.")
     # Filtrar las filas que corresponden al mes especificado
-    filtered_df = df[df['month'] == month_number]
+    df_filter_month = df[df['month'] == month_number]
     # Contar los IDs en las filas filtradas
-    count_ids = filtered_df['id'].count()
+    count_ids = df_filter_month['id'].count()
     return {"endpoint1": f"Fueron estrenadas {count_ids} peliculas en el mes de {month}"}
 
 
@@ -47,13 +47,58 @@ async def film_cant_mes(month: str):
     Args:
         month (str): ejemplo: "enero"
     Returns:
-        _type_: ejemplo: 2000 filmaciones en el mes de enero
+        _type_: ejemplo: Fueron estrenadas 2000 películas en el mes de enero
     """
     try:
-        # Cambia la ruta del archivo según la ubicación de tu archivo
+        # Busca la ruta del archivo y crea el DataFrame como variable
         df = pd.read_csv("dataset/data_movies.csv")
         # Aplicar la función para obtener la cantidad de filmaciones según mes aplicado
         result = cantidad_filmaciones_mes(df, month)
+        return JSONResponse(content=jsonable_encoder(result), media_type="application/json")
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=404, detail="Archivo csv no encontrado, revisa si la ruta del archivo es correcta.")
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error al leer el archivo csv: {str(e)}")
+
+
+def cantidad_filmaciones_dia(df, weekday: str):
+    """Obtiene la cantidad de filmaciones según día de la semana indicado
+    Args:
+        df: DataFrame de películas 
+        weekday (str): nombre del día de la semana en castellano
+    Raises:
+        HTTPException: en caso de que el día de la semana indicado no sea válido o no esté escrito en castellano o sea nulo
+    Returns:
+        _type_: entero o integer
+    """
+    # Lista de días válidos en castellano
+    dias_validos = ['lunes', 'martes', 'miércoles',
+                    'jueves', 'viernes', 'sábado', 'domingo']
+    if weekday not in dias_validos:
+        raise HTTPException(
+            status_code=400, detail=f"El día '{weekday}' no es válido.")
+    # Filtrar las filas que corresponden al dia de la semana especificado
+    df_filter_day = df[df['weekday'] == weekday]
+    # Contar los IDs en las filas filtradas
+    count_ids = df_filter_day['id'].count()
+    return {"endpoint2": f"Fueron estrenadas {count_ids} peliculas los dias {weekday}"}
+
+
+@app.get('/cantidad_filmaciones_dia/{weekday}')
+async def film_cant_dia(weekday: str):
+    """Obtiene la cantidad de filmaciones según dia de la semana desde un archivo en formato csv
+    Args:
+        weekday (str): ejemplo: "lunes"
+    Returns:
+        _type_: ejemplo: Fueron estrenadas 2000 películas los dias lunes
+    """
+    try:
+        # Busca la ruta del archivo y crea el DataFrame como variable
+        df = pd.read_csv("dataset/data_movies.csv")
+        # Aplicar la función para obtener la cantidad de filmaciones según dia de semana aplicado
+        result = cantidad_filmaciones_mes(df, weekday)
         return JSONResponse(content=jsonable_encoder(result), media_type="application/json")
     except FileNotFoundError:
         raise HTTPException(
