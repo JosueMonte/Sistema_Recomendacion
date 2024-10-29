@@ -92,7 +92,7 @@ async def film_cant_dia(weekday: str):
     Args:
         weekday (str): ejemplo: "lunes"
     Returns:
-        _type_: ejemplo: Fueron estrenadas 2000 películas los dias lunes
+        _type_ (str): ejemplo: Fueron estrenadas 2000 películas los dias lunes
     """
     try:
         # Busca la ruta del archivo y crea el DataFrame como variable
