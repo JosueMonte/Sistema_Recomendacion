@@ -19,7 +19,7 @@ month_mapping = {
 }
 
 
-def film_count_m(df, month: str):
+def cantidad_filmaciones_mes(df, month: str):
     """Obtiene la cantidad de filmaciones según mes indicado
     Args:
         df: DataFrame de películas 
@@ -41,7 +41,7 @@ def film_count_m(df, month: str):
     return {"endpoint1": f"Fueron estrenadas {count_ids} peliculas en el mes de {month}"}
 
 
-@app.get('/film_count_m/{month}')
+@app.get('/cantidad_filmaciones_mes/{month}')
 async def film_cant_mes(month: str):
     """Obtiene la cantidad de filmaciones según mes desde un archivo en formato csv
     Args:
@@ -53,7 +53,7 @@ async def film_cant_mes(month: str):
         # Cambia la ruta del archivo según la ubicación de tu archivo
         df = pd.read_csv("dataset/data_movies.csv")
         # Aplicar la función para obtener la cantidad de filmaciones según mes aplicado
-        result = film_count_m(df, month)
+        result = cantidad_filmaciones_mes(df, month)
         return JSONResponse(content=jsonable_encoder(result), media_type="application/json")
     except FileNotFoundError:
         raise HTTPException(

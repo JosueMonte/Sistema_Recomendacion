@@ -25,6 +25,7 @@
 
 * fastapi (es local, vinculo mi puerto con la api al servidor web):
     * http://127.0.0.1:8000/
+    * http://127.0.0.1:8000/docs
 ## Video
 * Menor a 7 minutos.
 * Mostrar las consultas requeridas en funcionamiento desde la API.
@@ -37,8 +38,9 @@
 * entregar link de YouTube de acceso al video. Usarlo en modo incognito para comprobar que es publico. 
 
 # Recomnedación:
-    * Hacer un dataset chico para la funcion 1 y probar en render.
-    * Hacer otro para la funcion 2.
+    * Hacer un dataset chico para la funcion 1 y probar en render. Funcion de mes
+    * Hacer otro para la funcion 2 y deployar en render. Funcion de dia.
+    * Hacer otro para la función de recomendación de películas con ML y deployar en render. Esto tendria que terminarlo el viernes.
     * Método de explode en pandas para desanidar.
     * Crear un data set para desanidar las columnas.
     * Recortar los datos en todo sentido, no hay problemas: eliminar peliculas viejas, quedarnos con la de habla hispana, baja puntuación, pocas votaciones... eliminar links, posters.
