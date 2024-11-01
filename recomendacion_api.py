@@ -129,7 +129,7 @@ def score_titulo(df, titulo_de_la_filmacion: str):
 
     # Extrar año de estreno y popularidad
     release_year = pelicula['release_year'].values[0]
-    popularity = pelicula['popularity'].values[0]
+    popularity = round(pelicula['popularity'].values[0], 2)
     return {'endpoint3': f"La película {titulo_de_la_filmacion} fue estrenada en el año {release_year} con una popularidad de {popularity} puntos"}
 
 
@@ -140,12 +140,12 @@ async def film_score(titulo_de_la_filmacion: str):
     Args:
         titulo_de_la_filmacion (str): ejemplo: 'Toy story'
     Returns:
-        _type: ejemplo: La película 'Toy story' fue estrenada en el año 1995 con una popularidad de 21.05 puntos    """
+        _type: ejemplo: La película 'Toy story' fue estrenada en el año 1995 con una popularidad de 21.95 puntos    """
 
     try:
         # Busca la ruta del archivo en GitHub y crea el DataFrame como variable
         df = pd.read_csv('dataset/data_movies.csv')
-        # Aplicar la funci´n para obtener el año y la popularidad de la película ingresada
+        # Aplicar la función para obtener el año y la popularidad de la película ingresada
         result = score_titulo(df, titulo_de_la_filmacion)
         return JSONResponse(content=jsonable_encoder(result), media_type='application/json')
     except FileNotFoundError:
@@ -155,5 +155,56 @@ async def film_score(titulo_de_la_filmacion: str):
         raise HTTPException(
             status_code=500, detail=f"Error al leer el archivo csv: {str(e)}.")
 
-# Con el dataset llamado "data_movies.csv" se pueden agregar los endpoints (lo haré si tengo tiempo):
-#   * def votos_titulo( titulo_de_la_filmación ) se necesitan las columnas: [year, vote_count, vote_average]
+
+def votos_titulo(df, titulo_de_la_filmacion: str):
+    """Obtiene el año de estreno, un total de valoraciones y un promedio según película ingresada
+
+    Args:
+        df: DataFrame de películas
+        titulo_de_la_filmacion (str): nombre de la película
+    Raises:
+        HTTPException: en caso de que la película no esté escrita de forma correcta, no esté ingresada en el dataset o sea inexistente. Además, debe contar con al menos 2000 valoraciones.
+    Returns:
+        dict: Contiene el año de estreno, total de valoraciones y el promedio de valoraciones.
+    """
+    # Verificar si el título de la película está en el DataFrame
+    if titulo_de_la_filmacion not in df['title'].values:
+        raise HTTPException(
+            status_code=400, detail=f"Puede ser que la película '{titulo_de_la_filmacion}': no haya sido estrenada, no esté registrada en el dataset, sea inexistente o no cuente con un mínimo de 2000 valoraciones.")
+
+    # Filtrar la fila que corresponde a la película especificada
+    pelicula = df[df['title'] == titulo_de_la_filmacion]
+
+    # Extrar año de estreno y popularidad
+    release_year = pelicula['release_year'].values[0]
+    vote_count = int(pelicula['vote_count'].values[0])
+    vote_average = round(pelicula['vote_average'].values[0], 1)
+
+    if vote_count < 2000:
+        return {'endpoint4': f"La película {titulo_de_la_filmacion} no cuenta con un mínimo de 2000 valoraciones y por tanto no se devuelve ningún valor."}
+
+    return {'endpoint4': f"La película {titulo_de_la_filmacion} fue estrenada en el año {release_year}, cuenta con un total de {vote_count} valoraciones y un promedio de {vote_average} puntos."}
+
+
+@app.get('/votos_titulo/{titulo_de_la_filmacion}')
+async def film_vote(titulo_de_la_filmacion: str):
+    """Obtiene el año de estreno, la cantidad de votos y su promedio según película ingresada
+
+    Args:
+        titulo_de_la_filmacion (str): ejemplo: 'Toy story'
+    Returns:
+        _type: ejemplo: La película 'Toy story' fue estrenada en el año 1995, cuenta con un total de 5415 y un promedio de 7.7 puntos.
+    """
+
+    try:
+        # Busca la ruta del archivo en GitHub y crea el DataFrame como variable
+        df = pd.read_csv('dataset/data_movies.csv')
+        # Aplicar la función para obtener el año, la cantidad de voto y el promedio de la película ingresada
+        result = votos_titulo(df, titulo_de_la_filmacion)
+        return JSONResponse(content=jsonable_encoder(result), media_type='application/json')
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=404, detail='Archivo .csv no encontrado, revisa si la ruta del archivo es correcta.')
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error al leer el archivo csv: {str(e)}.")
