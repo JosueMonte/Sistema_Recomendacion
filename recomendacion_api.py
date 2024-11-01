@@ -106,3 +106,54 @@ async def film_cant_dia(weekday: str):
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Error al leer el archivo csv: {str(e)}")
+
+
+def score_titulo(df, titulo_de_la_filmacion: str):
+    """Obtiene el año de estreno y la popularidad de la película y dataset ingresados
+
+    Args:
+        df: DataFrame de películas
+        titulo_de_la_filmacion (str): nombre de la película
+    Raises:
+        HTTPException: en caso de que la película no esté escrita de forma correcta o no esté ingresada en el dataset o es inexistente.
+    Returns:
+        _type_: str
+    """
+    # Verificar si el título de la película está en el DataFrame
+    if titulo_de_la_filmacion not in df['title'].values:
+        raise HTTPException(
+            status_code=400, detail=f"La película '{titulo_de_la_filmacion}' no ha sido estrenada o no está registrada en el dataset o es inexistente.")
+
+    # Filtrar la fila que corresponde a la película especificada
+    pelicula = df[df['title'] == titulo_de_la_filmacion]
+
+    # Extrar año de estreno y popularidad
+    release_year = pelicula['release_year'].values[0]
+    popularity = pelicula['popularity'].values[0]
+    return {'endpoint3': f"La película {titulo_de_la_filmacion} fue estrenada en el año {release_year} con una popularidad de {popularity} puntos"}
+
+
+@app.get('/score_titulo/{titulo_de_la_filmacion}')
+async def film_score(titulo_de_la_filmacion: str):
+    """Obtiene el año de estreno y la popularidad de la película ingresada
+
+    Args:
+        titulo_de_la_filmacion (str): ejemplo: 'Toy story'
+    Returns:
+        _type: ejemplo: La película 'Toy story' fue estrenada en el año 1995 con una popularidad de 21.05 puntos    """
+
+    try:
+        # Busca la ruta del archivo en GitHub y crea el DataFrame como variable
+        df = pd.read_csv('dataset/data_movies.csv')
+        # Aplicar la funci´n para obtener el año y la popularidad de la película ingresada
+        result = score_titulo(df, titulo_de_la_filmacion)
+        return JSONResponse(content=jsonable_encoder(result), media_type='application/json')
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=404, detail='Archivo .csv no encontrado, revisa si la ruta del archivo es correcta.')
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error al leer el archivo csv: {str(e)}.")
+
+# Con el dataset llamado "data_movies.csv" se pueden agregar los endpoints (lo haré si tengo tiempo):
+#   * def votos_titulo( titulo_de_la_filmación ) se necesitan las columnas: [year, vote_count, vote_average]
