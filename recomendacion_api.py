@@ -128,7 +128,7 @@ def score_titulo(df, titulo_de_la_filmacion: str):
     pelicula = df[df['title'] == titulo_de_la_filmacion]
 
     # Extrar año de estreno y popularidad
-    release_year = int(pelicula['release_year'].values[0])
+    release_year = pelicula['release_year'].values[0]
     popularity = round(pelicula['popularity'].values[0], 2)
     return {'endpoint3': f"La película {titulo_de_la_filmacion} fue estrenada en el año {release_year} con una popularidad de {popularity} puntos"}
 
@@ -176,8 +176,8 @@ def votos_titulo(df, titulo_de_la_filmacion: str):
     pelicula = df[df['title'] == titulo_de_la_filmacion]
 
     # Extrar año de estreno y popularidad
-    release_year = int(pelicula['release_year'].values[0])
-    vote_count = int(pelicula['vote_count'].values[0])
+    release_year = pelicula['release_year'].values[0]
+    vote_count = pelicula['vote_count'].values[0]
     vote_average = round(pelicula['vote_average'].values[0], 1)
 
     if vote_count < 2000:
