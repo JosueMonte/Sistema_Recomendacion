@@ -14,6 +14,10 @@
 * __Opcionales__: 
 * __Valores atípicos (outliers)__: Detecta valores anómalos que pueden afectar los modelos. Usa gráficos como boxplots o medidas estadísticas.
 * __Valores duplicados__: Revisa y elimina filas duplicadas si es necesario.
+* nubes de palabras para ver las más frecuentes.
+* gráficas:
+    * nubes de palabras con las palabras más frecuentes en los título de las películas.
+    * encontrar similitud con otras películas, podría ser por puntaje.
 
 ## 3. Análisis Univariado
 * __Visualización de distribución de variables__: Usa gráficos como histogramas, diagramas de densidad o diagramas de caja para entender la distribución de cada variable individualmente.
