@@ -49,7 +49,7 @@ Además, se desarrollan otros endpoints que son capaces de:
    git clone https://github.com/JosueMonte/Sistema_Recomendacion
    ```
 
-2. Instala los paquetes requeridos en el archivo:
+2. Instala los paquetes requeridos en el archivo llamado:
    ```sh
    requirements.txt
    ```
