@@ -1,6 +1,4 @@
 venv
-datasets
 **/__pycache__/
 __pycache__
-eda_backup.ipynb
-eda_backup_1.ipynb
+ignore

@@ -289,7 +289,7 @@ async def film_recommendation(titulo: str):
 
     try:
         # Busca la ruta del archivo en GitHub y crea el DataFrame como variable
-        df = pd.read_csv('dataset/data_movies_ml.csv')
+        df = pd.read_parquet('dataset/data_movies_ml.parquet')
         # Aplicar la función para obtener el año, la cantidad de voto y el promedio de la película ingresada
         result = recomendacion(df, titulo)
         return JSONResponse(content=jsonable_encoder(result), media_type='application/json')
