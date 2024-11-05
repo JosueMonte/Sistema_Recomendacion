@@ -44,15 +44,15 @@ Además, se desarrollan otros endpoints que son capaces de:
 
 ## Instalación
 
-Existe un archivo llamado requirements.txt el cual contiene todas las librerías a instalar.
-
 1. Clona este repositorio:
    ```sh
-   git clone
-https://github.com/JosueMonte/Sistema_Recomendacion
+   git clone https://github.com/JosueMonte/Sistema_Recomendacion
    ```
 
-2. Instala el archivo llamado requirements.txt el cual contiene todas las librerías a instalar.
+2. Instala los paquetes requeridos en el archivo:
+   ```sh
+   requirements.txt
+   ```
 
 ## Notebooks disponibles
 
